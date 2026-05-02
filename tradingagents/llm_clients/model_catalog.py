@@ -102,6 +102,16 @@ MODEL_OPTIONS: ProviderModeOptions = {
         ],
     },
     # OpenRouter: fetched dynamically. Azure: any deployed model name.
+    "nvidia": {
+        "quick": [
+            ("Gemma 4 31B Instruct", "google/gemma-4-31b-it"),
+            ("Custom model ID", "custom"),
+        ],
+        "deep": [
+            ("Gemma 4 31B Instruct", "google/gemma-4-31b-it"),
+            ("Custom model ID", "custom"),
+        ],
+    },
     "ollama": {
         "quick": [
             ("Qwen3:latest (8B, local)", "qwen3:latest"),
