@@ -4,7 +4,8 @@ import warnings
 import pytest
 
 from tradingagents.llm_clients.base_client import BaseLLMClient
-from tradingagents.llm_clients.model_catalog import get_known_models
+from tradingagents.llm_clients.factory import create_llm_client
+from tradingagents.llm_clients.model_catalog import get_known_models, get_model_options
 from tradingagents.llm_clients.validators import validate_model
 
 
@@ -44,7 +45,7 @@ class ModelValidationTests(unittest.TestCase):
         self.assertIn("openai", str(caught[0].message))
 
     def test_openrouter_and_ollama_accept_custom_models_without_warning(self):
-        for provider in ("openrouter", "ollama"):
+        for provider in ("openrouter", "ollama", "nvidia"):
             client = DummyLLMClient(provider, "custom-model-name")
 
             with self.subTest(provider=provider):
@@ -53,3 +54,12 @@ class ModelValidationTests(unittest.TestCase):
                     client.get_llm()
 
                 self.assertEqual(caught, [])
+
+    def test_nvidia_is_openai_compatible_provider_with_gemma_option(self):
+        client = create_llm_client("nvidia", "google/gemma-4-31b-it")
+
+        self.assertEqual(client.provider, "nvidia")
+        self.assertIn(
+            ("Gemma 4 31B Instruct", "google/gemma-4-31b-it"),
+            get_model_options("nvidia", "quick"),
+        )
